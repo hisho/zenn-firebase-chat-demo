@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "run-p lint:*",
+    "lint:next": "next lint . --ignore-path .prettierignore --max-warnings 0",
+    "lint:prettier": "prettier --check .",
+    "lint:typecheck": "tsc --pretty --noEmit",
+    "format": "run-s format:eslint format:prettier",
+    "format:eslint": "yarn lint:next --fix",
+    "format:prettier": "yarn lint:prettier --write"
   },
   "dependencies": {
     "next": "12.3.1",
