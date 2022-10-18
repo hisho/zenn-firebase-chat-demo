@@ -12,14 +12,29 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+import { FirebaseError } from '@firebase/util'
 
 export const Page = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    console.log({ email, password })
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    setIsLoading(true)
     e.preventDefault()
+    try {
+      const auth = getAuth()
+      await createUserWithEmailAndPassword(auth, email, password)
+      setEmail('')
+      setPassword('')
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        console.log(e)
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -55,7 +70,9 @@ export const Page = () => {
         </Grid>
         <Spacer height={4} aria-hidden />
         <Center>
-          <Button type={'submit'}>アカウントを作成</Button>
+          <Button type={'submit'} isLoading={isLoading}>
+            アカウントを作成
+          </Button>
         </Center>
       </chakra.form>
     </Container>
