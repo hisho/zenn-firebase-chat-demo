@@ -12,14 +12,25 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { FirebaseError } from '@firebase/util'
 
 export const Page = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    console.log({ email, password })
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    try {
+      const auth = getAuth()
+      await signInWithEmailAndPassword(auth, email, password)
+      setEmail('')
+      setPassword('')
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        console.log(e)
+      }
+    }
   }
 
   return (
