@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "run-p dev:* watch:*",
+    "dev:next": "next dev",
+    "build": "run-s generate:path build:next",
+    "build:next": "next build",
     "start": "next start",
     "lint": "run-p lint:*",
     "lint:next": "next lint . --ignore-path .prettierignore --max-warnings 0",
@@ -12,7 +14,9 @@
     "lint:typecheck": "tsc --pretty --noEmit",
     "format": "run-s format:eslint format:prettier",
     "format:eslint": "yarn lint:next --fix",
-    "format:prettier": "yarn lint:prettier --write"
+    "format:prettier": "yarn lint:prettier --write",
+    "watch:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida --watch",
+    "generate:path": "pathpida --ignorePath .gitignore --output src/lib/pathpida"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.3.6",
@@ -21,6 +25,7 @@
     "firebase": "^9.12.1",
     "framer-motion": "^7.5.4",
     "next": "12.3.1",
+    "pathpida": "^0.18.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
