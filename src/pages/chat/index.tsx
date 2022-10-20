@@ -7,13 +7,26 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
+import { getDatabase, push, ref } from '@firebase/database'
+import { FirebaseError } from '@firebase/util'
 
 export const Page = () => {
   const [message, setMessage] = useState<string>('')
 
-  const handleSendMessage = (e: FormEvent<HTMLFormElement>) => {
-    console.log({ message })
+  const handleSendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    try {
+      const db = getDatabase()
+      const dbRef = ref(db, 'chat')
+      await push(dbRef, {
+        message,
+      })
+      setMessage('')
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        console.log(e)
+      }
+    }
   }
 
   return (
