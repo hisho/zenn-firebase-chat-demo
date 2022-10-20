@@ -17,6 +17,7 @@ import { FirebaseError } from '@firebase/util'
 import { getAuth, signOut } from 'firebase/auth'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { pagesPath } from '@src/lib/pathpida/$path'
 
 export const Header = () => {
   const { user } = useAuthContext()
@@ -32,7 +33,7 @@ export const Header = () => {
         status: 'success',
         position: 'top',
       })
-      push('/signin')
+      push(pagesPath.signup.$url())
     } catch (e) {
       if (e instanceof FirebaseError) {
         console.log(e)

@@ -2,6 +2,7 @@ import { useAuthContext } from '@src/feature/auth/provider/AuthProvider'
 import { useRouter } from 'next/router'
 import type { ReactNode } from 'react'
 import { Box } from '@chakra-ui/react'
+import { pagesPath } from '@src/lib/pathpida/$path'
 
 type Props = {
   children: ReactNode
@@ -16,7 +17,7 @@ export const AuthGuard = ({ children }: Props) => {
   }
 
   if (user === null) {
-    push('/signin')
+    push(pagesPath.signin.$url())
     return null
   }
 
