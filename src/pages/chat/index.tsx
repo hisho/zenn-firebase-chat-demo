@@ -10,12 +10,9 @@ import {
   Spacer,
   Text,
 } from '@chakra-ui/react'
-import { FormEvent, useState } from 'react'
-import { getDatabase, push, ref } from '@firebase/database'
+import { FormEvent, useEffect, useState } from 'react'
+import { getDatabase, onChildAdded, push, ref } from '@firebase/database'
 import { FirebaseError } from '@firebase/util'
-
-const _message = '確認用メッセージです。'
-const _messages = [...Array(10)].map((_, i) => _message.repeat(i + 1))
 
 type MessageProps = {
   message: string
@@ -53,13 +50,32 @@ export const Page = () => {
     }
   }
 
+  const [chats, setChats] = useState<{ message: string }[]>([])
+
+  useEffect(() => {
+    try {
+      const db = getDatabase()
+      const dbRef = ref(db, 'chat')
+      return onChildAdded(dbRef, (snapshot) => {
+        const message = String(snapshot.val()['message'] ?? '')
+        setChats((prev) => [...prev, { message }])
+      })
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        console.error(e)
+      }
+      return
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Container py={14}>
       <Heading>チャット</Heading>
       <Spacer height={4} aria-hidden />
       <Flex flexDirection={'column'} overflowY={'auto'} gap={2} height={400}>
-        {_messages.map((message, index) => (
-          <Message message={message} key={`ChatMessage_${index}`} />
+        {chats.map((chat, index) => (
+          <Message message={chat.message} key={`ChatMessage_${index}`} />
         ))}
       </Flex>
       <Spacer height={2} aria-hidden />
