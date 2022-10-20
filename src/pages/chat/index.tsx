@@ -1,14 +1,38 @@
 import {
+  Avatar,
+  Box,
   Button,
   chakra,
   Container,
+  Flex,
   Heading,
   Input,
   Spacer,
+  Text,
 } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
 import { getDatabase, push, ref } from '@firebase/database'
 import { FirebaseError } from '@firebase/util'
+
+const _message = '確認用メッセージです。'
+const _messages = [...Array(10)].map((_, i) => _message.repeat(i + 1))
+
+type MessageProps = {
+  message: string
+}
+
+const Message = ({ message }: MessageProps) => {
+  return (
+    <Flex alignItems={'start'}>
+      <Avatar />
+      <Box ml={2}>
+        <Text bgColor={'gray.200'} rounded={'md'} px={2} py={1}>
+          {message}
+        </Text>
+      </Box>
+    </Flex>
+  )
+}
 
 export const Page = () => {
   const [message, setMessage] = useState<string>('')
@@ -32,7 +56,13 @@ export const Page = () => {
   return (
     <Container py={14}>
       <Heading>チャット</Heading>
-      <Spacer height={8} aria-hidden />
+      <Spacer height={4} aria-hidden />
+      <Flex flexDirection={'column'} overflowY={'auto'} gap={2} height={400}>
+        {_messages.map((message, index) => (
+          <Message message={message} key={`ChatMessage_${index}`} />
+        ))}
+      </Flex>
+      <Spacer height={2} aria-hidden />
       <chakra.form display={'flex'} gap={2} onSubmit={handleSendMessage}>
         <Input value={message} onChange={(e) => setMessage(e.target.value)} />
         <Button type={'submit'}>送信</Button>
