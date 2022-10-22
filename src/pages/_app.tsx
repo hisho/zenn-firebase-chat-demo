@@ -12,7 +12,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       <AuthProvider>
         <Header />
-        <chakra.main flex={1} display={'flex'} flexDirection={'column'}>
+        <chakra.main
+          flex={1}
+          display={'flex'}
+          flexDirection={'column'}
+          minHeight={0}
+        >
           <Component {...pageProps} />
         </chakra.main>
         <Footer />
