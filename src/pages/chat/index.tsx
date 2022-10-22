@@ -13,6 +13,7 @@ import {
 import { FormEvent, useEffect, useState } from 'react'
 import { getDatabase, onChildAdded, push, ref } from '@firebase/database'
 import { FirebaseError } from '@firebase/util'
+import { AuthGuard } from '@src/feature/auth/component/AuthGuard/AuthGuard'
 
 type MessageProps = {
   message: string
@@ -70,20 +71,22 @@ export const Page = () => {
   }, [])
 
   return (
-    <Container py={14}>
-      <Heading>チャット</Heading>
-      <Spacer height={4} aria-hidden />
-      <Flex flexDirection={'column'} overflowY={'auto'} gap={2} height={400}>
-        {chats.map((chat, index) => (
-          <Message message={chat.message} key={`ChatMessage_${index}`} />
-        ))}
-      </Flex>
-      <Spacer height={2} aria-hidden />
-      <chakra.form display={'flex'} gap={2} onSubmit={handleSendMessage}>
-        <Input value={message} onChange={(e) => setMessage(e.target.value)} />
-        <Button type={'submit'}>送信</Button>
-      </chakra.form>
-    </Container>
+    <AuthGuard>
+      <Container py={14}>
+        <Heading>チャット</Heading>
+        <Spacer height={4} aria-hidden />
+        <Flex flexDirection={'column'} overflowY={'auto'} gap={2} height={400}>
+          {chats.map((chat, index) => (
+            <Message message={chat.message} key={`ChatMessage_${index}`} />
+          ))}
+        </Flex>
+        <Spacer height={2} aria-hidden />
+        <chakra.form display={'flex'} gap={2} onSubmit={handleSendMessage}>
+          <Input value={message} onChange={(e) => setMessage(e.target.value)} />
+          <Button type={'submit'}>送信</Button>
+        </chakra.form>
+      </Container>
+    </AuthGuard>
   )
 }
 
